@@ -19,6 +19,7 @@ public class Controller {
     public List<BookDetailsDTO> getBookDetailsbyGenre(@PathVariable String genreName){
         return bookService.getBookDetailsByGenre(genreName);
     }
+
     }
     
 
