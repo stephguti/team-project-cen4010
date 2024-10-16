@@ -7,14 +7,16 @@ public class BookDetailsDTO {
     private String authorFirstName;
     private String authorLastName;
     private String publisherName;
+    private Integer copiesSold;
 
     public BookDetailsDTO(String title, String genreName, String authorFirstName, String authorLastName,
-            String publisherName) {
+            String publisherName, Integer copiesSold) {
         this.title = title;
         this.genreName = genreName;
         this.authorFirstName = authorFirstName;
         this.authorLastName = authorLastName;
         this.publisherName = publisherName;
+        this.copiesSold = copiesSold;
     }
 
     public String getTitle() {
@@ -55,6 +57,14 @@ public class BookDetailsDTO {
 
     public void setPublisherName(String publisherName) {
         this.publisherName = publisherName;
+    }
+
+    public Integer getCopiesSold() {
+        return copiesSold;
+    }
+
+    public void setCopiesSold(Integer copiesSold) {
+        this.copiesSold = copiesSold;
     }
 
     
