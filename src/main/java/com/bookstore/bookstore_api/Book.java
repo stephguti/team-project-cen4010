@@ -1,5 +1,6 @@
 package com.bookstore.bookstore_api;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,7 +21,6 @@ public class Book {
     private String description;
     private int yearPublished;
     private float price;
-    private int copiesSold;
     private float rating;
 
     @ManyToOne
@@ -35,6 +35,9 @@ public class Book {
     @JoinColumn(name = "Publisher_ID", referencedColumnName="publisherId")
     private Publisher Publisher;
 
+    
+    @Column(name = "Copies_Sold")
+    private Integer copiesSold;
 
     public int getBookId() {
         return bookId;
@@ -84,11 +87,11 @@ public class Book {
         this.price = price;
     }
 
-    public int getCopiesSold() {
+    public Integer getCopiesSold() {
         return copiesSold;
     }
 
-    public void setCopiesSold(int copiesSold) {
+    public void setCopiesSold(Integer copiesSold) {
         this.copiesSold = copiesSold;
     }
 
