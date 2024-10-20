@@ -10,15 +10,6 @@ public class BookDetailsDTO {
     private Integer copiesSold;
 
     public BookDetailsDTO(String title, String genreName, String authorFirstName, String authorLastName,
-            String publisherName) {
-        this.title = title;
-        this.genreName = genreName;
-        this.authorFirstName = authorFirstName;
-        this.authorLastName = authorLastName;
-        this.publisherName = publisherName;
-    }
-
-    public BookDetailsDTO(String title, String genreName, String authorFirstName, String authorLastName,
             String publisherName, Integer copiesSold) {
         this.title = title;
         this.genreName = genreName;
@@ -75,7 +66,6 @@ public class BookDetailsDTO {
     public void setCopiesSold(Integer copiesSold) {
         this.copiesSold = copiesSold;
     }
-
     
 
 }

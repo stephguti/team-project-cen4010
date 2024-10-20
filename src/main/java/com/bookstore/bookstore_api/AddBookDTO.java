@@ -12,8 +12,6 @@ public class AddBookDTO {
     private int yearPublished;
     private int copiesSold;
 
-    // Getters and Setters
-
     public String getIsbn() {
         return isbn;
     }

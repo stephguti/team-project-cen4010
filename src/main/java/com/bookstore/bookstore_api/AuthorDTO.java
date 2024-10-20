@@ -5,7 +5,6 @@ public class AuthorDTO {
     private String firstName;
     private String lastName;
 
-    // Constructors
     public AuthorDTO() {}
 
     public AuthorDTO(Integer authorId, String firstName, String lastName) {
@@ -14,7 +13,6 @@ public class AuthorDTO {
         this.lastName = lastName;
     }
 
-    // Getters and Setters
     public Integer getAuthorId() {
         return authorId;
     }
