@@ -1,26 +1,23 @@
 package com.bookstore.bookstore_api;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-
-@Entity
-@Table(name= "author")
-public class Author {
-    @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+public class AuthorDTO {
     private Integer authorId;
-
     private String firstName;
     private String lastName;
 
-    public int getAuthorId() {
+    public AuthorDTO() {}
+
+    public AuthorDTO(Integer authorId, String firstName, String lastName) {
+        this.authorId = authorId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
+    public Integer getAuthorId() {
         return authorId;
     }
 
-    public void setAuthorId(int authorId) {
+    public void setAuthorId(Integer authorId) {
         this.authorId = authorId;
     }
 
@@ -39,10 +36,4 @@ public class Author {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-
-    public String getFullName() {
-        return firstName + " " + lastName;
-    }
-
-
 }

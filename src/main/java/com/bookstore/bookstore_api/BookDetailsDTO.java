@@ -66,7 +66,6 @@ public class BookDetailsDTO {
     public void setCopiesSold(Integer copiesSold) {
         this.copiesSold = copiesSold;
     }
-
     
 
 }
