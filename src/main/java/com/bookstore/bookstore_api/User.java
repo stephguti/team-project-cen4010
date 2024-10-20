@@ -33,9 +33,6 @@ public class User {
     @Column(name = "User_Address")  // Maps User_Address to userAddress
     private String userAddress;
 
-    @Column(name = "Credit_Card")  // Maps Credit_Card to creditCard
-    private String creditCard;
-
     // getters and setters
     public String getUsername() {
         return username;
@@ -84,14 +81,5 @@ public class User {
     public void setUserAddress(String userAddress) {
         this.userAddress = userAddress;
     }
-
-    public String getCreditCard() {
-        return creditCard;
-    }
-
-    public void setCreditCard(String creditCard) {
-        this.creditCard = creditCard;
-    }
-
 
 }
