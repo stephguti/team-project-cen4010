@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+// import java.util.Optional;
 
 @Service
 public class OrderService {
@@ -35,4 +35,17 @@ public class OrderService {
     public List<OrderModel> getOrdersByUserId(Long userId) {
         return orderRepository.findByUserId(userId);
     }
+
+    public OrderModel updateOrder(Long orderId, OrderModel updatedOrder) {
+        return orderRepository.findById(orderId)
+                .map(existingOrder -> {
+                    existingOrder.setUserId(updatedOrder.getUserId());
+                    existingOrder.setOrderDate(updatedOrder.getOrderDate());
+                    existingOrder.setTotalAmount(updatedOrder.getTotalAmount());
+                    existingOrder.setStatus(updatedOrder.getStatus());
+                    return orderRepository.save(existingOrder);
+                })
+                .orElse(null); 
+    }
 }
+
