@@ -41,13 +41,13 @@ public class Controller {
         return bookService.getBookDetailsByGenre(genreName);
     }
 
-bookstoreapi
+
     @GetMapping("/top-sellers")
     public List<BookDetailsDTO> getTop10BestSellingBooks() {
         return bookService.getTop10BestSellingBooks();
     }
     
-user-details
+
     }
     
 
