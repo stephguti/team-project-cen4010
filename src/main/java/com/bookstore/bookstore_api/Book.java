@@ -21,6 +21,8 @@ public class Book {
     private String description;
     private int yearPublished;
     private float price;
+
+    @Column(name = "Rating")
     private float rating;
 
     @ManyToOne

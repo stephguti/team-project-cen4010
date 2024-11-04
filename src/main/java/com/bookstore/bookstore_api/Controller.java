@@ -52,7 +52,6 @@ public class Controller {
         return bookService.getBooksByRating(rating);
     }
 
-
     }
     
 

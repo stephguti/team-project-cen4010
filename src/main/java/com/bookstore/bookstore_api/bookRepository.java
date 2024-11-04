@@ -38,7 +38,6 @@ public interface bookRepository extends JpaRepository<Book, Integer> {
     "JOIN b.Publisher p " + 
     "WHERE b.rating >= :rating")
     List<BookDetailsDTO> findBooksByRating(@Param("rating") float rating);
-
 }
 
 

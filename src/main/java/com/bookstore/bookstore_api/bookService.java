@@ -101,20 +101,20 @@ public class bookService {
     }
 
     // find a book by its ISBN
-    public BookDetailsDTO findBookByIsbn(String isbn) {
-        Book book = bookRepository.findByIsbn(isbn);
-        if (book == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Book not found");
-        }
-        return new BookDetailsDTO(
-            book.getTitle(), 
-            book.getGenre().getName(), 
-            book.getAuthor().getFirstName(), 
-            book.getAuthor().getLastName(), 
-            book.getPublisher().getName(), 
-            book.getCopiesSold()
-            );
-    }
+    // public BookDetailsDTO findBookByIsbn(String isbn) {
+    //     Book book = bookRepository.findByIsbn(isbn);
+    //     if (book == null) {
+    //         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Book not found");
+    //     }
+    //     return new BookDetailsDTO(
+    //         book.getTitle(), 
+    //         book.getGenre().getName(), 
+    //         book.getAuthor().getFirstName(), 
+    //         book.getAuthor().getLastName(), 
+    //         book.getPublisher().getName(), 
+    //         book.getCopiesSold()
+    //         );
+    // }
 
     @Autowired
     public bookService(bookRepository bookRepository){
