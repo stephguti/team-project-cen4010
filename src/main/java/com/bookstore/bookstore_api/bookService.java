@@ -129,4 +129,8 @@ public class bookService {
         Pageable pageable = PageRequest.of(0, 10);
         return bookRepository.findTop10BestSellingBooks(pageable);
     }
+
+    public List<BookDetailsDTO> getBooksByRating(float rating){
+        return bookRepository.findBooksByRating(rating);
+    }
 }
