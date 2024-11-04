@@ -24,6 +24,7 @@ public class bookService {
 
     @Autowired
     private GenreRepository genreRepository;
+    
 
     @Transactional
     public void addBook(AddBookDTO addBookDTO) {
