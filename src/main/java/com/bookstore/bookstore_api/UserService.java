@@ -24,4 +24,32 @@ public class UserService {
         }
         return null;
     }
+
+    public void updateUser(String username, User updatedUser) {
+        User existingUser = userRepository.findByUsername(username);
+
+        if(existingUser == null) {
+            throw new IllegalArgumentException("ERROR! User not found");
+        }
+
+        if(updatedUser.getFirstName() != null) {
+            existingUser.setFirstName(updatedUser.getFirstName());
+        }
+
+        if(updatedUser.getLastName() != null) {
+            existingUser.setLastName(updatedUser.getLastName());
+        }
+
+        if(updatedUser.getPassword() != null) {
+            existingUser.setPassword(updatedUser.getPassword());
+        }
+
+        if(updatedUser.getUserAddress() != null) {
+            existingUser.setUserAddress(updatedUser.getUserAddress());
+        }
+
+        userRepository.save(existingUser);
+    }
+
+    
 }

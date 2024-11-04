@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class Controller {
 
     private final bookService bookService;
-
+    
     @Autowired
     public Controller(bookService bookService){
         this.bookService = bookService;
@@ -41,13 +41,12 @@ public class Controller {
         return bookService.getBookDetailsByGenre(genreName);
     }
 
-bookstoreapi
+
     @GetMapping("/top-sellers")
     public List<BookDetailsDTO> getTop10BestSellingBooks() {
         return bookService.getTop10BestSellingBooks();
     }
-    
-user-details
+
     }
     
 
