@@ -10,6 +10,24 @@ public class BookDetailsDTO {
     private Integer copiesSold;
     private Float rating;
 
+    private String description;
+    private Float price;
+    private Integer yearPublished;
+
+    public BookDetailsDTO(String title, String genreName, String authorFirstName, String authorLastName,
+            String publisherName, Integer copiesSold, Float rating, String Description, Float price, Integer yearPublished) {
+        this.title = title;
+        this.genreName = genreName;
+        this.authorFirstName = authorFirstName;
+        this.authorLastName = authorLastName;
+        this.publisherName = publisherName;
+        this.copiesSold = copiesSold;
+        this.rating = rating;
+        this.description = description;
+        this.price = price;
+        this.yearPublished = yearPublished;
+    }
+
     public BookDetailsDTO(String title, String genreName, String authorFirstName, String authorLastName,
             String publisherName, Integer copiesSold, Float rating) {
         this.title = title;
@@ -77,5 +95,28 @@ public class BookDetailsDTO {
         this.rating = rating;
     }
     
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public float getPrice() {
+        return price;
+    }
+
+    public void setPrice(float price) {
+        this.price = price;
+    }
+
+    public Integer getYearPublished() {
+        return yearPublished;
+    }
+
+    public void setYearPublished(Integer yearPublished) {
+        this.yearPublished = yearPublished;
+    }
 
 }
