@@ -1,5 +1,6 @@
 package com.bookstore.bookstore_api;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,15 +16,20 @@ import jakarta.transaction.Transactional;
 public class bookService {
 
     private final bookRepository bookRepository;
-
+    private final AuthorRepository authorRepository;
+    private final PublisherRepository publisherRepository;
+    private final GenreRepository genreRepository;
+    private final AuthorService authorService;
+    
     @Autowired
-    private AuthorRepository authorRepository;
-
-    @Autowired
-    private PublisherRepository publisherRepository;
-
-    @Autowired
-    private GenreRepository genreRepository;
+    public bookService(bookRepository bookRepository, AuthorRepository authorRepository, AuthorService authorService, PublisherRepository publisherRepository, GenreRepository genreRepository) {
+        this.bookRepository = bookRepository;
+        this.authorRepository = authorRepository;
+        this.authorService = authorService;
+        this.publisherRepository = publisherRepository;
+        this.genreRepository = genreRepository;
+    }
+    
     
 
     @Transactional
@@ -69,6 +75,7 @@ public class bookService {
         book.setAuthor(author);
         book.setPublisher(publisher);
         book.setGenre(genre);
+        book.setRating(addBookDTO.getRating());
         book.setYearPublished(addBookDTO.getYearPublished());
         book.setCopiesSold(addBookDTO.getCopiesSold());
 
@@ -121,10 +128,6 @@ public class bookService {
             );
     }
 
-    @Autowired
-    public bookService(bookRepository bookRepository){
-        this.bookRepository = bookRepository;
-    }
 
     public List<BookDetailsDTO> getBookDetailsByGenre(String genreName) {
         return bookRepository.findBookDetailsByGenre(genreName);

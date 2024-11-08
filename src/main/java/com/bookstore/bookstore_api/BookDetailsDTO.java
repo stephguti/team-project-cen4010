@@ -15,7 +15,7 @@ public class BookDetailsDTO {
     private Integer yearPublished;
 
     public BookDetailsDTO(String title, String genreName, String authorFirstName, String authorLastName,
-            String publisherName, Integer copiesSold, Float rating, String Description, Float price, Integer yearPublished) {
+            String publisherName, Integer copiesSold, Float rating, String description, Float price, Integer yearPublished) {
         this.title = title;
         this.genreName = genreName;
         this.authorFirstName = authorFirstName;
