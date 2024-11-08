@@ -14,9 +14,17 @@ public interface bookRepository extends JpaRepository<Book, Integer> {
     boolean existsByIsbn(String isbn);
     // finding books by their isbn
     Book findByIsbn(String isbn);
-    // Method to find books by author
-    List<Book> findByAuthor(Author author); 
+    // OG TO FIND BOOKS BY AUTHOR
+    //List<Book> findByAuthor(Author author); 
     
+    // Method to find books by author
+    @Query("SELECT new com.bookstore.bookstore_api.BookTitleDTO(b.isbn, b.title) " +
+       "FROM Book b " +
+       "WHERE b.author.firstName = :firstName AND b.author.lastName = :lastName")
+    List<BookTitleDTO> findBookTitlesByAuthor(@Param("firstName") String firstName, @Param("lastName") String lastName);
+
+
+
     @Query ("SELECT new com.bookstore.bookstore_api.BookDetailsDTO(b.title, g.name, a.firstName, a.lastName, p.name, b.copiesSold, b.rating) " +
     "FROM Book b " +
     "JOIN b.genre g " +

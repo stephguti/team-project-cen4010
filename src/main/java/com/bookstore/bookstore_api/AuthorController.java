@@ -24,6 +24,17 @@ public class AuthorController {
     }
 
     @GetMapping("/books/{firstName}/{lastName}")
+    public ResponseEntity<List<BookTitleDTO>> getBooksByAuthor(@PathVariable String firstName, @PathVariable String lastName) {
+        List<BookTitleDTO> books = authorService.getBooksByAuthorName(firstName, lastName);
+        if (books.isEmpty()) {
+            return ResponseEntity.noContent().build(); // No books found for this author
+        }
+        return ResponseEntity.ok(books);
+    }
+    
+
+    /* THIS IS OG METHOD
+    @GetMapping("/books/{firstName}/{lastName}")
     public ResponseEntity<List<Book>> getBooksByAuthor(@PathVariable String firstName, @PathVariable String lastName) {
         List<Book> books = authorService.getBooksByAuthorName(firstName, lastName);
         if (books.isEmpty()) {
@@ -31,4 +42,5 @@ public class AuthorController {
         }
         return ResponseEntity.ok(books);
     }
+    */
 }

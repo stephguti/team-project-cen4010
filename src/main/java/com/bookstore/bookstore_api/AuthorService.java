@@ -23,20 +23,16 @@ public class AuthorService {
         this.bookRepository = bookRepository;
         this.publisherRepository = publisherRepository;
     }
-
-        // Add or update author with biography and publisher
         @Transactional
         public void addAuthor(AuthorDTO authorDTO) {
             // Look for an existing author by first name and last name
             Author existingAuthor = authorRepository.findByFirstNameAndLastName(authorDTO.getFirstName(), authorDTO.getLastName());
             
             if (existingAuthor != null) {
-                // Author exists, so we check if we need to update the biography or publisher
                 boolean biographyIsMissing = authorDTO.getBiography() != null && existingAuthor.getBiography() == null;
                 boolean publisherIsMissing = authorDTO.getPublisher() != null && existingAuthor.getPublisher() == null;
     
                 if (biographyIsMissing || publisherIsMissing) {
-                    // Update missing biography and/or publisher
                     if (biographyIsMissing) {
                         existingAuthor.setBiography(authorDTO.getBiography());
                     }
@@ -78,19 +74,35 @@ public class AuthorService {
             }
         }
     
+        @Transactional
+        public List<BookTitleDTO> getBooksByAuthorName(String firstName, String lastName) {
+            Author author = authorRepository.findByFirstNameAndLastName(firstName, lastName);
+    
+            if (author == null) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Author not found: " + firstName + " " + lastName);
+            }
+
+            List<BookTitleDTO> books = bookRepository.findBookTitlesByAuthor(firstName, lastName);
+    
+            if (books.isEmpty()) {
+                // Throw an exception if no books are found for the author
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No books found for author: " + firstName + " " + lastName);
+            }
+    
+            return books;
+        }
 
 
-    // Get a list of books by author's full name (first and last name)
+    /* OG METHOD
     public List<Book> getBooksByAuthorName(String firstName, String lastName) {
-        // Find the author by first name and last name
         Author author = authorRepository.findByFirstNameAndLastName(firstName, lastName);
         
         if (author == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Author not found.");
         }
         
-        // Retrieve and return the list of books associated with this author
         return bookRepository.findByAuthor(author);
     }
+    */
 }
 
