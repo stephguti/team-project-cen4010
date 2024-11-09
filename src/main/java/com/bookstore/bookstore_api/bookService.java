@@ -101,21 +101,21 @@ public class bookService {
         }
     }
 
-    // find a book by its ISBN
-    public BookDetailsDTO findBookByIsbn(String isbn) {
-        Book book = bookRepository.findByIsbn(isbn);
-        if (book == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Book not found");
-        }
-        return new BookDetailsDTO(
-            book.getTitle(), 
-            book.getGenre().getName(), 
-            book.getAuthor().getFirstName(), 
-            book.getAuthor().getLastName(), 
-            book.getPublisher().getName(), 
-            book.getCopiesSold()
-            );
-    }
+    // // find a book by its ISBN
+    // public BookDetailsDTO findBookByIsbn(String isbn) {
+    //     Book book = bookRepository.findByIsbn(isbn);
+    //     if (book == null) {
+    //         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Book not found");
+    //     }
+    //     return new BookDetailsDTO(
+    //         book.getTitle(), 
+    //         book.getGenre().getName(), 
+    //         book.getAuthor().getFirstName(), 
+    //         book.getAuthor().getLastName(), 
+    //         book.getPublisher().getName(), 
+    //         book.getCopiesSold()
+    //         );
+    // }
 
     @Autowired
     public bookService(bookRepository bookRepository){
@@ -129,5 +129,9 @@ public class bookService {
     public List<BookDetailsDTO> getTop10BestSellingBooks(){
         Pageable pageable = PageRequest.of(0, 10);
         return bookRepository.findTop10BestSellingBooks(pageable);
+    }
+
+    public List<BookDetailsDTO> getBooksByRating(float rating){
+        return bookRepository.findBooksByRating(rating);
     }
 }
