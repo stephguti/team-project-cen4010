@@ -2,6 +2,7 @@ package com.bookstore.bookstore_api;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -126,6 +128,7 @@ public class bookService {
             book.getPrice(),
             book.getYearPublished()
             );
+
     }
 
 
@@ -140,5 +143,16 @@ public class bookService {
 
     public List<BookDetailsDTO> getBooksByRating(float rating){
         return bookRepository.findBooksByRating(rating);
+    }
+
+    @Transactional
+    public int applyDiscountToBooksByPublisherName(String publisherName, Float discount){
+        Optional<Publisher> publisher = publisherRepository.findByName(publisherName);
+        if (publisher.isPresent()) {
+            return bookRepository.applyDiscountToBooksByPublisher(publisherName, discount);
+        }
+        else {
+             throw new EntityNotFoundException("Publisher with name " + publisherName + " not found.");
+        }
     }
 }

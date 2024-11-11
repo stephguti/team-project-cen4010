@@ -3,6 +3,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -48,6 +49,11 @@ public interface bookRepository extends JpaRepository<Book, Integer> {
     "JOIN b.Publisher p " + 
     "WHERE b.rating >= :rating")
     List<BookDetailsDTO> findBooksByRating(@Param("rating") float rating);
+
+    @Modifying
+    @Query("UPDATE Book b SET b.price = b.price * (1 - :discount / 100) WHERE b.Publisher.name = :publisherName")
+    int applyDiscountToBooksByPublisher(@Param("publisherName") String publisherName, @Param("discount") Float discount);
+
 }
 
 

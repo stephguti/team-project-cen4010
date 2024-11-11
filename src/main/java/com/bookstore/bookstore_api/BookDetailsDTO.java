@@ -38,7 +38,7 @@ public class BookDetailsDTO {
         this.copiesSold = copiesSold;
         this.rating = rating;
     }
-
+    
     public String getTitle() {
         return title;
     }
@@ -87,11 +87,11 @@ public class BookDetailsDTO {
         this.copiesSold = copiesSold;
     }
 
-    public float getRating() {
+    public Float getRating() {
         return rating;
     }
 
-    public void setRating(float rating) {
+    public void setRating(Float rating) {
         this.rating = rating;
     }
     
