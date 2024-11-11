@@ -1,6 +1,7 @@
 // added java file
 package com.bookstore.bookstore_api;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,9 +38,24 @@ public class AuthorService {
                         existingAuthor.setBiography(authorDTO.getBiography());
                     }
                     
+                    /* OG CHECK PUBLISHER
                     if (publisherIsMissing) {
                         Publisher publisher = publisherRepository.findByName(authorDTO.getPublisher().getName());
                         if (publisher == null) {
+                            publisher = new Publisher();
+                            publisher.setName(authorDTO.getPublisher().getName());
+                            publisherRepository.save(publisher);
+                        }
+                        existingAuthor.setPublisher(publisher);
+                    } */
+
+                    // If publisher exsists, use that publisher, if not, create new one
+                    if (publisherIsMissing) {
+                        Optional<Publisher> optionalPublisher = publisherRepository.findByName(authorDTO.getPublisher().getName());
+                        Publisher publisher;
+                        if (optionalPublisher.isPresent()) {
+                            publisher = optionalPublisher.get();
+                        } else {
                             publisher = new Publisher();
                             publisher.setName(authorDTO.getPublisher().getName());
                             publisherRepository.save(publisher);
@@ -59,7 +75,8 @@ public class AuthorService {
                 newAuthor.setFirstName(authorDTO.getFirstName());
                 newAuthor.setLastName(authorDTO.getLastName());
                 newAuthor.setBiography(authorDTO.getBiography());
-    
+                
+                /*  OG CHECK IF PUBLISHER EXISTS
                 if (authorDTO.getPublisher() != null) {
                     Publisher publisher = publisherRepository.findByName(authorDTO.getPublisher().getName());
                     if (publisher == null) {
@@ -67,6 +84,25 @@ public class AuthorService {
                         publisher.setName(authorDTO.getPublisher().getName());
                         publisherRepository.save(publisher);
                     }
+                    newAuthor.setPublisher(publisher);
+                }*/
+
+
+                // If publisher exsists, use that publisher, if not, create new one
+                if (authorDTO.getPublisher() != null) {
+                    Optional<Publisher> optionalPublisher = publisherRepository.findByName(authorDTO.getPublisher().getName());
+                    Publisher publisher;
+                    
+                    if (optionalPublisher.isPresent()) {
+                        // Publisher exists, use it
+                        publisher = optionalPublisher.get();
+                    } else {
+                        // Publisher doesn't exist, create and save a new one
+                        publisher = new Publisher();
+                        publisher.setName(authorDTO.getPublisher().getName());
+                        publisherRepository.save(publisher);
+                    }
+                    
                     newAuthor.setPublisher(publisher);
                 }
     
