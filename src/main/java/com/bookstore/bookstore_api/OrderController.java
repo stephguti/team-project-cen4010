@@ -52,16 +52,6 @@ public class OrderController {
         return orderService.updateOrder(orderId, updatedOrder);
     }
 
-    // @GetMapping("/{orderId}/details")
-    // public Map<String, Object> getOrderWithItems(@PathVariable Long orderId) {
-    // OrderModel order = orderService.getOrderById(orderId);
-    // List<Order_Items_Model> orderItems = orderItemsService.getOrderItemsByOrderId(orderId);
-
-    // Map<String, Object> response = new HashMap<>();
-    // response.put("order", order);
-    // response.put("orderItems", orderItems);
-    
-    // return response;
     @GetMapping("/{orderId}/details")
     public Map<String, Object> getOrderWithItems(@PathVariable Long orderId) {
         OrderModel order = orderService.getOrderById(orderId);
