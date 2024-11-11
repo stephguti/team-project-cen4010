@@ -1,6 +1,7 @@
 package com.bookstore.bookstore_api;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -44,13 +46,13 @@ public class bookService {
             authorRepository.save(author);
         }
 
-        // Handle Publisher
-        Publisher publisher = publisherRepository.findByName(addBookDTO.getPublisher().getName());
-        if (publisher == null) {
-            publisher = new Publisher();
-            publisher.setName(addBookDTO.getPublisher().getName());
-            publisherRepository.save(publisher);
-        }
+        // // Handle Publisher
+        // Publisher publisher = publisherRepository.findByName(addBookDTO.getPublisher().getName());
+        // if (publisher == null) {
+        //     publisher = new Publisher();
+        //     publisher.setName(addBookDTO.getPublisher().getName());
+        //     publisherRepository.save(publisher);
+        // }
 
         // Handle Genre
         Genre genre = genreRepository.findByName(addBookDTO.getGenre().getName());
@@ -60,19 +62,19 @@ public class bookService {
             genreRepository.save(genre);
         }
 
-        // Map DTO to Book entity
-        Book book = new Book();
-        book.setIsbn(addBookDTO.getIsbn());
-        book.setTitle(addBookDTO.getTitle());
-        book.setDescription(addBookDTO.getDescription());
-        book.setPrice(addBookDTO.getPrice());
-        book.setAuthor(author);
-        book.setPublisher(publisher);
-        book.setGenre(genre);
-        book.setYearPublished(addBookDTO.getYearPublished());
-        book.setCopiesSold(addBookDTO.getCopiesSold());
+        // // Map DTO to Book entity
+        // Book book = new Book();
+        // book.setIsbn(addBookDTO.getIsbn());
+        // book.setTitle(addBookDTO.getTitle());
+        // book.setDescription(addBookDTO.getDescription());
+        // book.setPrice(addBookDTO.getPrice());
+        // book.setAuthor(author);
+        // book.setPublisher(publisher);
+        // book.setGenre(genre);
+        // book.setYearPublished(addBookDTO.getYearPublished());
+        // book.setCopiesSold(addBookDTO.getCopiesSold());
 
-        bookRepository.save(book);
+        // bookRepository.save(book);
     }
 
     private void validateAddBookDTO(AddBookDTO addBookDTO) {
@@ -101,7 +103,7 @@ public class bookService {
         }
     }
 
-    // find a book by its ISBN
+    // // find a book by its ISBN
     // public BookDetailsDTO findBookByIsbn(String isbn) {
     //     Book book = bookRepository.findByIsbn(isbn);
     //     if (book == null) {
@@ -133,5 +135,16 @@ public class bookService {
 
     public List<BookDetailsDTO> getBooksByRating(float rating){
         return bookRepository.findBooksByRating(rating);
+    }
+
+    @Transactional
+    public int applyDiscountToBooksByPublisherName(String publisherName, Float discount){
+        Optional<Publisher> publisher = publisherRepository.findByName(publisherName);
+        if (publisher.isPresent()) {
+            return bookRepository.applyDiscountToBooksByPublisher(publisherName, discount);
+        }
+        else {
+             throw new EntityNotFoundException("Publisher with name " + publisherName + " not found.");
+        }
     }
 }
