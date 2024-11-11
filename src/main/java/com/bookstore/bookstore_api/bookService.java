@@ -52,9 +52,20 @@ public class bookService {
             authorRepository.save(author);
         }
 
-        // Handle Publisher
+        /*  OG Handle Publisher
         Publisher publisher = publisherRepository.findByName(addBookDTO.getPublisher().getName());
         if (publisher == null) {
+            publisher = new Publisher();
+            publisher.setName(addBookDTO.getPublisher().getName());
+            publisherRepository.save(publisher);
+        } */
+
+        // New publisher handler 
+        Optional<Publisher> optionalPublisher = publisherRepository.findByName(addBookDTO.getPublisher().getName());
+        Publisher publisher;
+        if (optionalPublisher.isPresent()) {
+            publisher = optionalPublisher.get();
+        } else {
             publisher = new Publisher();
             publisher.setName(addBookDTO.getPublisher().getName());
             publisherRepository.save(publisher);
