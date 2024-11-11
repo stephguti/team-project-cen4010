@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -35,12 +37,12 @@ public class Controller {
         bookService.addBook(addBookDTO);
     }
 
-    // // searching for book with isbn
-    // @GetMapping("/isbn/{isbn}")
-    // public ResponseEntity<BookDetailsDTO> getBookByIsbn(@PathVariable String isbn) {
-    //     BookDetailsDTO bookDetails = bookService.findBookByIsbn(isbn);
-    //     return ResponseEntity.ok(bookDetails);
-    // }
+    // searching for book with isbn
+    @GetMapping("/isbn/{isbn}")
+    public ResponseEntity<BookDetailsDTO> getBookByIsbn(@PathVariable String isbn) {
+        BookDetailsDTO bookDetails = bookService.findBookByIsbn(isbn);
+        return ResponseEntity.ok(bookDetails);
+    }
 
     @GetMapping("/genre/{genreName}")
     public List<BookDetailsDTO> getBookDetailsbyGenre(@PathVariable String genreName){

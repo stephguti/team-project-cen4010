@@ -15,8 +15,18 @@ public interface bookRepository extends JpaRepository<Book, Integer> {
     boolean existsByIsbn(String isbn);
     // finding books by their isbn
     Book findByIsbn(String isbn);
+    // OG TO FIND BOOKS BY AUTHOR
+    //List<Book> findByAuthor(Author author); 
     
-    @Query ("SELECT new com.bookstore.bookstore_api.BookDetailsDTO(b.title, g.name, a.firstName, a.lastName, p.name, b.copiesSold, b.rating) " +
+    // Method to find books by author
+    @Query("SELECT new com.bookstore.bookstore_api.BookTitleDTO(b.isbn, b.title) " +
+       "FROM Book b " +
+       "WHERE b.Author.firstName = :firstName AND b.Author.lastName = :lastName")
+    List<BookTitleDTO> findBookTitlesByAuthor(@Param("firstName") String firstName, @Param("lastName") String lastName);
+
+
+
+    @Query ("SELECT new com.bookstore.bookstore_api.BookDetailsDTO(b.title, g.name, a.firstName, a.lastName, p.name, b.copiesSold, b.rating, b.description, b.price, b.yearPublished) " +
     "FROM Book b " +
     "JOIN b.Genre g " +
     "JOIN b.Author a " +
@@ -24,7 +34,7 @@ public interface bookRepository extends JpaRepository<Book, Integer> {
     "WHERE g.name = :genreName")
     List<BookDetailsDTO> findBookDetailsByGenre(@Param("genreName") String genreName);
 
-    @Query ("SELECT new com.bookstore.bookstore_api.BookDetailsDTO(b.title, g.name, a.firstName, a.lastName, p.name, b.copiesSold, b.rating) " +
+    @Query ("SELECT new com.bookstore.bookstore_api.BookDetailsDTO(b.title, g.name, a.firstName, a.lastName, p.name, b.copiesSold, b.rating, b.description, b.price, b.yearPublished) " +
     "FROM Book b " +
     "JOIN b.Genre g " +
     "JOIN b.Author a " +
@@ -32,7 +42,7 @@ public interface bookRepository extends JpaRepository<Book, Integer> {
     "ORDER BY b.copiesSold DESC")
     List<BookDetailsDTO> findTop10BestSellingBooks(Pageable pageable);
 
-    @Query ("SELECT new com.bookstore.bookstore_api.BookDetailsDTO(b.title, g.name, a.firstName, a.lastName, p.name, b.copiesSold, b.rating) " +
+    @Query ("SELECT new com.bookstore.bookstore_api.BookDetailsDTO(b.title, g.name, a.firstName, a.lastName, p.name, b.copiesSold, b.rating, b.description, b.price, b.yearPublished) " +
     "FROM Book b " +
     "JOIN b.Genre g " +
     "JOIN b.Author a " +

@@ -1,5 +1,6 @@
 package com.bookstore.bookstore_api;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,15 +18,20 @@ import jakarta.transaction.Transactional;
 public class bookService {
 
     private final bookRepository bookRepository;
-
+    private final AuthorRepository authorRepository;
+    private final PublisherRepository publisherRepository;
+    private final GenreRepository genreRepository;
+    private final AuthorService authorService;
+    
     @Autowired
-    private AuthorRepository authorRepository;
-
-    @Autowired
-    private PublisherRepository publisherRepository;
-
-    @Autowired
-    private GenreRepository genreRepository;
+    public bookService(bookRepository bookRepository, AuthorRepository authorRepository, AuthorService authorService, PublisherRepository publisherRepository, GenreRepository genreRepository) {
+        this.bookRepository = bookRepository;
+        this.authorRepository = authorRepository;
+        this.authorService = authorService;
+        this.publisherRepository = publisherRepository;
+        this.genreRepository = genreRepository;
+    }
+    
     
 
     @Transactional
@@ -46,13 +52,13 @@ public class bookService {
             authorRepository.save(author);
         }
 
-        // // Handle Publisher
-        // Publisher publisher = publisherRepository.findByName(addBookDTO.getPublisher().getName());
-        // if (publisher == null) {
-        //     publisher = new Publisher();
-        //     publisher.setName(addBookDTO.getPublisher().getName());
-        //     publisherRepository.save(publisher);
-        // }
+        // Handle Publisher
+        Publisher publisher = publisherRepository.findByName(addBookDTO.getPublisher().getName());
+        if (publisher == null) {
+            publisher = new Publisher();
+            publisher.setName(addBookDTO.getPublisher().getName());
+            publisherRepository.save(publisher);
+        }
 
         // Handle Genre
         Genre genre = genreRepository.findByName(addBookDTO.getGenre().getName());
@@ -62,19 +68,20 @@ public class bookService {
             genreRepository.save(genre);
         }
 
-        // // Map DTO to Book entity
-        // Book book = new Book();
-        // book.setIsbn(addBookDTO.getIsbn());
-        // book.setTitle(addBookDTO.getTitle());
-        // book.setDescription(addBookDTO.getDescription());
-        // book.setPrice(addBookDTO.getPrice());
-        // book.setAuthor(author);
-        // book.setPublisher(publisher);
-        // book.setGenre(genre);
-        // book.setYearPublished(addBookDTO.getYearPublished());
-        // book.setCopiesSold(addBookDTO.getCopiesSold());
+        // Map DTO to Book entity
+        Book book = new Book();
+        book.setIsbn(addBookDTO.getIsbn());
+        book.setTitle(addBookDTO.getTitle());
+        book.setDescription(addBookDTO.getDescription());
+        book.setPrice(addBookDTO.getPrice());
+        book.setAuthor(author);
+        book.setPublisher(publisher);
+        book.setGenre(genre);
+        book.setRating(addBookDTO.getRating());
+        book.setYearPublished(addBookDTO.getYearPublished());
+        book.setCopiesSold(addBookDTO.getCopiesSold());
 
-        // bookRepository.save(book);
+        bookRepository.save(book);
     }
 
     private void validateAddBookDTO(AddBookDTO addBookDTO) {
@@ -103,26 +110,27 @@ public class bookService {
         }
     }
 
-    // // find a book by its ISBN
-    // public BookDetailsDTO findBookByIsbn(String isbn) {
-    //     Book book = bookRepository.findByIsbn(isbn);
-    //     if (book == null) {
-    //         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Book not found");
-    //     }
-    //     return new BookDetailsDTO(
-    //         book.getTitle(), 
-    //         book.getGenre().getName(), 
-    //         book.getAuthor().getFirstName(), 
-    //         book.getAuthor().getLastName(), 
-    //         book.getPublisher().getName(), 
-    //         book.getCopiesSold()
-    //         );
-    // }
+    // find a book by its ISBN
+    public BookDetailsDTO findBookByIsbn(String isbn) {
+        Book book = bookRepository.findByIsbn(isbn);
+        if (book == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Book not found");
+        }
+        return new BookDetailsDTO(
+            book.getTitle(), 
+            book.getGenre().getName(), 
+            book.getAuthor().getFirstName(), 
+            book.getAuthor().getLastName(), 
+            book.getPublisher().getName(), 
+            book.getCopiesSold(),
+            book.getRating(),
+            book.getDescription(),
+            book.getPrice(),
+            book.getYearPublished()
+            );
 
-    @Autowired
-    public bookService(bookRepository bookRepository){
-        this.bookRepository = bookRepository;
     }
+
 
     public List<BookDetailsDTO> getBookDetailsByGenre(String genreName) {
         return bookRepository.findBookDetailsByGenre(genreName);
