@@ -27,15 +27,15 @@ public class Book {
 
     @ManyToOne
     @JoinColumn(name = "Genre_ID", referencedColumnName="genreId")
-    private Genre genre;
+    private Genre Genre;
 
     @ManyToOne
     @JoinColumn(name = "Author_ID", referencedColumnName="authorId")
-    private Author author;
+    private Author Author;
 
     @ManyToOne
     @JoinColumn(name = "Publisher_ID", referencedColumnName="publisherId")
-    private Publisher publisher;
+    private Publisher Publisher;
 
     
     @Column(name = "Copies_Sold")
@@ -106,27 +106,27 @@ public class Book {
     }
 
     public Genre getGenre() {
-        return genre;
+        return Genre;
     }
 
-    public void setGenre(Genre genre) {
-        this.genre = genre;
+    public void setGenre(Genre Genre) {
+        this.Genre = Genre;
     }
 
     public Author getAuthor() {
-        return author;
+        return Author;
     }
 
-    public void setAuthor(Author author) {
-        this.author = author;
+    public void setAuthor(Author Author) {
+        this.Author = Author;
     }
 
     public Publisher getPublisher() {
-        return publisher;
+        return Publisher;
     }
 
-    public void setPublisher(Publisher publisher) {
-        this.publisher = publisher;
+    public void setPublisher(Publisher Publisher) {
+        this.Publisher = Publisher;
     }
 
 
