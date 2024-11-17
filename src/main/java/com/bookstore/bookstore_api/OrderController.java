@@ -56,7 +56,7 @@ public class OrderController {
     public Map<String, Object> getOrderWithItems(@PathVariable Long orderId) {
         OrderModel order = orderService.getOrderById(orderId);
         List<Order_Items_Model> orderItems = orderItemsService.getOrderItemsByOrderId(orderId);
-        List<PaymentsModel> payments = paymentsService.getPaymentsByOrderId(orderId); // Using the service method here
+        List<PaymentsModel> payments = paymentsService.getPaymentsByOrderId(orderId);
     
         Map<String, Object> response = new HashMap<>();
         response.put("order", order);
@@ -65,5 +65,10 @@ public class OrderController {
     
         return response;
     }
+
+    @GetMapping("/user/{userId}/saved")
+    public List<OrderModel> getSavedOrdersByUserId(@PathVariable Long userId) {
+        return orderService.getOrdersByUserIdAndStatus(userId, "Saved");
+}
 
 }

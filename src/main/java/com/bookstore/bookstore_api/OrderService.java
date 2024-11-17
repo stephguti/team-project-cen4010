@@ -47,5 +47,10 @@ public class OrderService {
                 })
                 .orElse(null); 
     }
+
+
+    public List<OrderModel> getOrdersByUserIdAndStatus(Long userId, String status) {
+        return orderRepository.findByUserIdAndStatus(userId, status);
+    }
 }
 
