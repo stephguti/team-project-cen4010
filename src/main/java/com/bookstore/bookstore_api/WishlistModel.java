@@ -1,6 +1,7 @@
 package com.bookstore.bookstore_api;
 
 import jakarta.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "wishlist")
@@ -16,8 +17,10 @@ public class WishlistModel {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
-    public WishlistModel() {
-    }
+    @OneToMany(mappedBy = "wishListId", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<WishList_ItemsModel> items;
+
+    public WishlistModel() {}
 
     // Getters and Setters
     public Long getId() {
@@ -42,5 +45,13 @@ public class WishlistModel {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public List<WishList_ItemsModel> getItems() {
+        return items;
+    }
+
+    public void setItems(List<WishList_ItemsModel> items) {
+        this.items = items;
     }
 }

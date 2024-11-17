@@ -26,7 +26,7 @@ public class WishlistController {
         Optional<WishlistModel> wishlist = wishlistService.getWishlistById(id);
         return wishlist.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
-    }
+    }    
 
     // Get wishlists by user_id
     @GetMapping("/user/{userId}")
