@@ -38,6 +38,15 @@ public interface bookRepository extends JpaRepository<Book, Integer> {
     "JOIN b.Publisher p " + 
     "WHERE b.rating >= :rating")
     List<BookDetailsDTO> findBooksByRating(@Param("rating") float rating);
+
+
+    @Query("SELECT new com.bookstore.bookstore_api.BookDetailsDTO(b.title, b.Genre.name, b.Author.firstName, b.Author.lastName, b.Publisher.name, b.copiesSold, b.rating) " +
+           "FROM WishList_ItemsModel w " +
+           "JOIN Book b ON b.bookId = w.productId " +
+           "WHERE w.wishListId = :wishListId")
+    List<BookDetailsDTO> findBookDetailsByWishlistId(@Param("wishListId") Long wishListId);
+
+
 }
 
 

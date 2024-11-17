@@ -14,24 +14,24 @@ public class WishlistController {
     @Autowired
     private WishlistService wishlistService;
 
-    // Get all wishlists
+    // Get all wishlists with book details
     @GetMapping
     public List<WishlistModel> getAllWishlists() {
-        return wishlistService.getAllWishlists();
+        return wishlistService.getAllWishlistsWithBookDetails(); 
     }
 
-    // Get wishlist by ID
+    // Get wishlist by ID with book details
     @GetMapping("/{id}")
     public ResponseEntity<WishlistModel> getWishlistById(@PathVariable Long id) {
-        Optional<WishlistModel> wishlist = wishlistService.getWishlistById(id);
+        Optional<WishlistModel> wishlist = wishlistService.getWishlistByIdWithBookDetails(id); 
         return wishlist.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }    
 
-    // Get wishlists by user_id
+    // Get wishlists by user_id with book details
     @GetMapping("/user/{userId}")
     public List<WishlistModel> getWishlistsByUserId(@PathVariable Long userId) {
-        return wishlistService.getAllWishlists().stream()
+        return wishlistService.getAllWishlistsWithBookDetails().stream() 
                 .filter(wishlist -> wishlist.getUserId().equals(userId))
                 .toList();
     }

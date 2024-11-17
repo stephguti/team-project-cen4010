@@ -20,6 +20,9 @@ public class WishlistModel {
     @OneToMany(mappedBy = "wishListId", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WishList_ItemsModel> items;
 
+    @Transient // This field is not stored in the database
+    private List<BookDetailsDTO> bookDetails; // Field to hold book details
+
     public WishlistModel() {}
 
     // Getters and Setters
@@ -53,5 +56,13 @@ public class WishlistModel {
 
     public void setItems(List<WishList_ItemsModel> items) {
         this.items = items;
+    }
+
+    public List<BookDetailsDTO> getBookDetails() {
+        return bookDetails;
+    }
+
+    public void setBookDetails(List<BookDetailsDTO> bookDetails) {
+        this.bookDetails = bookDetails;
     }
 }
