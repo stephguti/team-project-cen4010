@@ -25,7 +25,7 @@ public class UserController {
         return userService.addUser(user);
     }
 
-    // Get mapping to retriece a User Object and its fields by their username
+    // Get mapping to retrieve a User Object and its fields by their username
     @GetMapping("/username/{username}")
     public User getUserByUsername(@PathVariable String username) {
         return userService.getUserByUsername(username);
