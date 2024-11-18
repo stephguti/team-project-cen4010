@@ -50,10 +50,17 @@ public class Controller {
     }
 
 
+
+
+
     @GetMapping("/top-sellers")
     public List<BookDetailsDTO> getTop10BestSellingBooks() {
         return bookService.getTop10BestSellingBooks();
     }
+
+    
+}
+
 
     @GetMapping("/by-rating")
     public List<BookDetailsDTO> getBooksByRating(@RequestParam("rating") float rating){
@@ -71,6 +78,7 @@ public class Controller {
             }
         }
     }
+
 
     
 
