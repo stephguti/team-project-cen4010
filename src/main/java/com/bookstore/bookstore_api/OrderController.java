@@ -13,11 +13,13 @@ public class OrderController {
 
     private final OrderService orderService;
     private final Order_Items_Service orderItemsService;
+    private final PaymentsService paymentsService;
 
     @Autowired
-    public OrderController(OrderService orderService, Order_Items_Service orderItemsService) {
+    public OrderController(OrderService orderService, Order_Items_Service orderItemsService, PaymentsService paymentsService) {
         this.orderService = orderService;
         this.orderItemsService = orderItemsService;
+        this.paymentsService = paymentsService;
     }
 
     @GetMapping
@@ -52,13 +54,16 @@ public class OrderController {
 
     @GetMapping("/{orderId}/details")
     public Map<String, Object> getOrderWithItems(@PathVariable Long orderId) {
-    OrderModel order = orderService.getOrderById(orderId);
-    List<Order_Items_Model> orderItems = orderItemsService.getOrderItemsByOrderId(orderId);
-
-    Map<String, Object> response = new HashMap<>();
-    response.put("order", order);
-    response.put("orderItems", orderItems);
+        OrderModel order = orderService.getOrderById(orderId);
+        List<Order_Items_Model> orderItems = orderItemsService.getOrderItemsByOrderId(orderId);
+        List<PaymentsModel> payments = paymentsService.getPaymentsByOrderId(orderId); // Using the service method here
     
-    return response;
-}
+        Map<String, Object> response = new HashMap<>();
+        response.put("order", order);
+        response.put("orderItems", orderItems);
+        response.put("payments", payments);
+    
+        return response;
+    }
+
 }

@@ -1,6 +1,8 @@
 package com.bookstore.bookstore_api;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -9,21 +11,27 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 @Service
 public class bookService {
 
     private final bookRepository bookRepository;
-
+    private final AuthorRepository authorRepository;
+    private final PublisherRepository publisherRepository;
+    private final GenreRepository genreRepository;
+    private final AuthorService authorService;
+    
     @Autowired
-    private AuthorRepository authorRepository;
-
-    @Autowired
-    private PublisherRepository publisherRepository;
-
-    @Autowired
-    private GenreRepository genreRepository;
+    public bookService(bookRepository bookRepository, AuthorRepository authorRepository, AuthorService authorService, PublisherRepository publisherRepository, GenreRepository genreRepository) {
+        this.bookRepository = bookRepository;
+        this.authorRepository = authorRepository;
+        this.authorService = authorService;
+        this.publisherRepository = publisherRepository;
+        this.genreRepository = genreRepository;
+    }
+    
     
 
     @Transactional
@@ -44,9 +52,20 @@ public class bookService {
             authorRepository.save(author);
         }
 
-        // Handle Publisher
+        /*  OG Handle Publisher
         Publisher publisher = publisherRepository.findByName(addBookDTO.getPublisher().getName());
         if (publisher == null) {
+            publisher = new Publisher();
+            publisher.setName(addBookDTO.getPublisher().getName());
+            publisherRepository.save(publisher);
+        } */
+
+        // New publisher handler 
+        Optional<Publisher> optionalPublisher = publisherRepository.findByName(addBookDTO.getPublisher().getName());
+        Publisher publisher;
+        if (optionalPublisher.isPresent()) {
+            publisher = optionalPublisher.get();
+        } else {
             publisher = new Publisher();
             publisher.setName(addBookDTO.getPublisher().getName());
             publisherRepository.save(publisher);
@@ -69,6 +88,7 @@ public class bookService {
         book.setAuthor(author);
         book.setPublisher(publisher);
         book.setGenre(genre);
+        book.setRating(addBookDTO.getRating());
         book.setYearPublished(addBookDTO.getYearPublished());
         book.setCopiesSold(addBookDTO.getCopiesSold());
 
@@ -113,14 +133,15 @@ public class bookService {
             book.getAuthor().getFirstName(), 
             book.getAuthor().getLastName(), 
             book.getPublisher().getName(), 
-            book.getCopiesSold()
+            book.getCopiesSold(),
+            book.getRating(),
+            book.getDescription(),
+            book.getPrice(),
+            book.getYearPublished()
             );
+
     }
 
-    @Autowired
-    public bookService(bookRepository bookRepository){
-        this.bookRepository = bookRepository;
-    }
 
     public List<BookDetailsDTO> getBookDetailsByGenre(String genreName) {
         return bookRepository.findBookDetailsByGenre(genreName);
@@ -129,5 +150,20 @@ public class bookService {
     public List<BookDetailsDTO> getTop10BestSellingBooks(){
         Pageable pageable = PageRequest.of(0, 10);
         return bookRepository.findTop10BestSellingBooks(pageable);
+    }
+
+    public List<BookDetailsDTO> getBooksByRating(float rating){
+        return bookRepository.findBooksByRating(rating);
+    }
+
+    @Transactional
+    public int applyDiscountToBooksByPublisherName(String publisherName, Float discount){
+        Optional<Publisher> publisher = publisherRepository.findByName(publisherName);
+        if (publisher.isPresent()) {
+            return bookRepository.applyDiscountToBooksByPublisher(publisherName, discount);
+        }
+        else {
+             throw new EntityNotFoundException("Publisher with name " + publisherName + " not found.");
+        }
     }
 }
