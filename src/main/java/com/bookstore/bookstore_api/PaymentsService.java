@@ -27,9 +27,17 @@ public class PaymentsService {
         return paymentsRepository.save(payment);
     }
 
+    // public void deletePayment(Long paymentId) {
+    //     paymentsRepository.deleteById(paymentId);
+    // }
+
     public void deletePayment(Long paymentId) {
+        if (!paymentsRepository.existsById(paymentId)) {
+            throw new IllegalArgumentException("Payment not found with ID: " + paymentId);
+        }
         paymentsRepository.deleteById(paymentId);
     }
+
 
     public List<PaymentsModel> getPaymentsByOrderId(Long orderId) {
         return paymentsRepository.findByOrderId(orderId);
