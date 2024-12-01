@@ -1,6 +1,8 @@
 package com.bookstore.bookstore_api;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,9 +34,18 @@ public class Order_Items_Controller {
     }
 
     @DeleteMapping("/{orderItemId}")
-    public void deleteOrderItem(@PathVariable Long orderItemId) {
+    // public void deleteOrderItem(@PathVariable Long orderItemId) {
+    //     orderItemsService.deleteOrderItem(orderItemId);
+    // }
+    public ResponseEntity<String> deleteOrderItem(@PathVariable Long orderItemId) {
+    try {
         orderItemsService.deleteOrderItem(orderItemId);
+        return ResponseEntity.ok("Order Item deleted successfully!");
+    } catch (IllegalArgumentException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
+
 
     @GetMapping("/order/{orderId}")
     public List<Order_Items_Model> getOrderItemsByOrderId(@PathVariable Long orderId) {

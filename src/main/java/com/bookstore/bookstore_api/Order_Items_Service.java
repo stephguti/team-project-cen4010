@@ -5,10 +5,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+
+
 @Service
 public class Order_Items_Service {
 
     private final Order_Items_Repository orderItemsRepository;
+    private OrderRepository orderRepository;
 
     @Autowired
     public Order_Items_Service(Order_Items_Repository orderItemsRepository) {
@@ -27,11 +30,24 @@ public class Order_Items_Service {
         return orderItemsRepository.save(orderItem);
     }
 
+    // public void deleteOrderItem(Long orderItemId) {
+    //     orderItemsRepository.deleteById(orderItemId);
+    // }
+
+
     public void deleteOrderItem(Long orderItemId) {
+        if (!orderItemsRepository.existsById(orderItemId)) {
+            throw new IllegalArgumentException("Order not found with ID: " + orderItemId);
+        }
         orderItemsRepository.deleteById(orderItemId);
     }
+    
+
+
 
     public List<Order_Items_Model> getOrderItemsByOrderId(Long orderId) {
-        return orderItemsRepository.findByOrderId(orderId);
+        OrderModel order = orderRepository.findById(orderId)
+                                          .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+        return orderItemsRepository.findByOrder(order);
     }
 }

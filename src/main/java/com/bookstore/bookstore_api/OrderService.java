@@ -28,9 +28,17 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
+    // public void deleteOrder(Long orderId) {
+    //     orderRepository.deleteById(orderId);
+    // }
+
     public void deleteOrder(Long orderId) {
+        if (!orderRepository.existsById(orderId)) {
+            throw new IllegalArgumentException("Order not found with ID: " + orderId);
+        }
         orderRepository.deleteById(orderId);
     }
+    
 
     public List<OrderModel> getOrdersByUserId(Long userId) {
         return orderRepository.findByUserId(userId);

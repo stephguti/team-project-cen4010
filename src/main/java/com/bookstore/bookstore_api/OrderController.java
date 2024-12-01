@@ -1,7 +1,12 @@
 package com.bookstore.bookstore_api;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import com.bookstore.cart_dtos.*;
+
 
 import java.util.List;
 import java.util.Map;
@@ -28,9 +33,32 @@ public class OrderController {
     }
 
     @GetMapping("/{orderId}")
-    public OrderModel getOrderById(@PathVariable Long orderId) {
-        return orderService.getOrderById(orderId);
+    public OrderDTO getOrderById(@PathVariable Long orderId) {
+        OrderModel order = orderService.getOrderById(orderId);
+        if (order == null) {
+            throw new IllegalArgumentException("Order not found");
+        }
+    
+        OrderDTO orderDTO = new OrderDTO();
+        orderDTO.setOrderId(order.getOrderId());
+        orderDTO.setUserId(order.getUserId());
+        orderDTO.setOrderDate(order.getOrderDate());
+        orderDTO.setTotalAmount(order.getTotalAmount());
+        orderDTO.setStatus(order.getStatus());
+    
+        List<OrderItemDTO> orderItems = order.getOrderItems().stream().map(item -> {
+            OrderItemDTO dto = new OrderItemDTO();
+            dto.setOrderItemId(item.getOrderItemId());
+            dto.setBookId(item.getBookId());
+            dto.setQuantity(item.getQuantity());
+            dto.setPrice(item.getPrice());
+            return dto;
+        }).toList();
+    
+        orderDTO.setOrderItems(orderItems);
+        return orderDTO;
     }
+    
 
     @PostMapping
     public OrderModel createOrder(@RequestBody OrderModel order) {
@@ -38,9 +66,15 @@ public class OrderController {
     }
 
     @DeleteMapping("/{orderId}")
-    public void deleteOrder(@PathVariable Long orderId) {
+    public ResponseEntity<String> deleteOrder(@PathVariable Long orderId) {
+    try {
         orderService.deleteOrder(orderId);
+        return ResponseEntity.ok("Order deleted successfully!");
+    } catch (IllegalArgumentException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
+
 
     @GetMapping("/user/{userId}")
     public List<OrderModel> getOrdersByUserId(@PathVariable Long userId) {
