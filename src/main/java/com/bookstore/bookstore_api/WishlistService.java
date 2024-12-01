@@ -60,9 +60,17 @@ public class WishlistService {
     }
 
     // Delete a wishlist
+
     public void deleteWishlist(Long id) {
-        WishlistModel wishlist = wishlistRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Wishlist not found with id: " + id));
-        wishlistRepository.delete(wishlist);
+        if (!wishlistRepository.existsById(id)) {
+            throw new IllegalArgumentException("Wish List  not found with ID: " + id);
+        }
+        wishlistRepository.deleteById(id);
     }
+
+    // public void deleteWishlist(Long id) {
+    //     WishlistModel wishlist = wishlistRepository.findById(id)
+    //             .orElseThrow(() -> new RuntimeException("Wishlist not found with id: " + id));
+    //     wishlistRepository.delete(wishlist);
+    // }
 }
