@@ -64,12 +64,4 @@ public class WishlistController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
-    // public ResponseEntity<Void> deleteWishlist(@PathVariable Long id) {
-    //     try {
-    //         wishlistService.deleteWishlist(id);
-    //         return ResponseEntity.noContent().build();
-    //     } catch (RuntimeException e) {
-    //         return ResponseEntity.notFound().build();
-    //     }
-    // }
 }

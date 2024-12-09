@@ -7,8 +7,9 @@ public class OrderItemDTO {
     private Long bookId;
     private Integer quantity;
     private BigDecimal price;
+    private String bookName;
 
-    // Getters and Setters
+    // Getters and setters
     public Long getOrderItemId() {
         return orderItemId;
     }
@@ -39,5 +40,13 @@ public class OrderItemDTO {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+
+    public String getBookName() {
+        return bookName;
+    }
+
+    public void setBookName(String bookName) {
+        this.bookName = bookName;
     }
 }

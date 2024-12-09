@@ -20,8 +20,8 @@ public class WishlistModel {
     @OneToMany(mappedBy = "wishListId", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WishList_ItemsModel> items;
 
-    @Transient // This field is not stored in the database
-    private List<BookDetailsDTO> bookDetails; // Field to hold book details
+    @Transient 
+    private List<BookDetailsDTO> bookDetails; 
 
     public WishlistModel() {}
 
