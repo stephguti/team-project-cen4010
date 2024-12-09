@@ -19,12 +19,14 @@ public class OrderController {
     private final OrderService orderService;
     private final Order_Items_Service orderItemsService;
     private final PaymentsService paymentsService;
+    private final bookRepository bookRepository;
 
     @Autowired
-    public OrderController(OrderService orderService, Order_Items_Service orderItemsService, PaymentsService paymentsService) {
+    public OrderController(OrderService orderService, Order_Items_Service orderItemsService, PaymentsService paymentsService, bookRepository bookRepository) {
         this.orderService = orderService;
         this.orderItemsService = orderItemsService;
         this.paymentsService = paymentsService;
+        this.bookRepository = bookRepository;
     }
 
     @GetMapping
@@ -32,32 +34,68 @@ public class OrderController {
         return orderService.getAllOrders();
     }
 
+
+
     @GetMapping("/{orderId}")
     public OrderDTO getOrderById(@PathVariable Long orderId) {
         OrderModel order = orderService.getOrderById(orderId);
         if (order == null) {
             throw new IllegalArgumentException("Order not found");
         }
-    
+
         OrderDTO orderDTO = new OrderDTO();
         orderDTO.setOrderId(order.getOrderId());
         orderDTO.setUserId(order.getUserId());
         orderDTO.setOrderDate(order.getOrderDate());
         orderDTO.setTotalAmount(order.getTotalAmount());
         orderDTO.setStatus(order.getStatus());
-    
+
         List<OrderItemDTO> orderItems = order.getOrderItems().stream().map(item -> {
+            // Fetch book details
+            Book book = bookRepository.findById(item.getBookId().intValue())
+                    .orElseThrow(() -> new IllegalArgumentException("Book not found"));
+
+            // Prepare the response DTO
             OrderItemDTO dto = new OrderItemDTO();
             dto.setOrderItemId(item.getOrderItemId());
             dto.setBookId(item.getBookId());
             dto.setQuantity(item.getQuantity());
             dto.setPrice(item.getPrice());
+            dto.setBookName(book.getTitle());
             return dto;
         }).toList();
-    
+
         orderDTO.setOrderItems(orderItems);
         return orderDTO;
     }
+
+
+    // @GetMapping("/{orderId}")
+    // public OrderDTO getOrderById(@PathVariable Long orderId) {
+    //     OrderModel order = orderService.getOrderById(orderId);
+    //     if (order == null) {
+    //         throw new IllegalArgumentException("Order not found");
+    //     }
+    
+    //     OrderDTO orderDTO = new OrderDTO();
+    //     orderDTO.setOrderId(order.getOrderId());
+    //     orderDTO.setUserId(order.getUserId());
+    //     orderDTO.setOrderDate(order.getOrderDate());
+    //     orderDTO.setTotalAmount(order.getTotalAmount());
+    //     orderDTO.setStatus(order.getStatus());
+    
+    //     List<OrderItemDTO> orderItems = order.getOrderItems().stream().map(item -> {
+    //         OrderItemDTO dto = new OrderItemDTO();
+    //         dto.setOrderItemId(item.getOrderItemId());
+    //         dto.setBookId(item.getBookId());
+    //         dto.setQuantity(item.getQuantity());
+    //         dto.setPrice(item.getPrice());
+    //         return dto;
+    //     }).toList();
+    
+    //     orderDTO.setOrderItems(orderItems);
+    //     return orderDTO;
+    // }
     
 
     @PostMapping

@@ -27,19 +27,57 @@ public class Order_Items_Controller {
 
     // Get all order items
     @GetMapping
-    public List<Order_Items_Model> getAllOrderItems() {
-        return orderItemsService.getAllOrderItems();
+    public List<OrderItemDTO> getAllOrderItems() {
+        List<Order_Items_Model> orderItems = orderItemsService.getAllOrderItems();
+    
+        return orderItems.stream().map(orderItem -> {
+            // Fetch book details
+            Book book = bookRepository.findById(orderItem.getBookId().intValue())
+                    .orElseThrow(() -> new IllegalArgumentException("Book not found"));
+    
+            // Prepare the response DTO
+            OrderItemDTO dto = new OrderItemDTO();
+            dto.setOrderItemId(orderItem.getOrderItemId());
+            dto.setBookId(orderItem.getBookId());
+            dto.setQuantity(orderItem.getQuantity());
+            dto.setPrice(orderItem.getPrice());
+            dto.setBookName(book.getTitle());
+            return dto;
+        }).toList();
     }
 
     // Get an order item by ID
+
+
     @GetMapping("/{orderItemId}")
-    public ResponseEntity<Order_Items_Model> getOrderItemById(@PathVariable Long orderItemId) {
+    public ResponseEntity<OrderItemDTO> getOrderItemById(@PathVariable Long orderItemId) {
         Order_Items_Model orderItem = orderItemsService.getOrderItemById(orderItemId);
         if (orderItem == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(orderItem);
+        // Fetch book details
+        Book book = bookRepository.findById(orderItem.getBookId().intValue())
+                .orElseThrow(() -> new IllegalArgumentException("Book not found"));
+
+        // Prepare the response DTO
+        OrderItemDTO dto = new OrderItemDTO();
+        dto.setOrderItemId(orderItem.getOrderItemId());
+        dto.setBookId(orderItem.getBookId());
+        dto.setQuantity(orderItem.getQuantity());
+        dto.setPrice(orderItem.getPrice());
+        dto.setBookName(book.getTitle());
+
+        return ResponseEntity.ok(dto);
     }
+
+    // @GetMapping("/{orderItemId}")
+    // public ResponseEntity<Order_Items_Model> getOrderItemById(@PathVariable Long orderItemId) {
+    //     Order_Items_Model orderItem = orderItemsService.getOrderItemById(orderItemId);
+    //     if (orderItem == null) {
+    //         return ResponseEntity.notFound().build();
+    //     }
+    //     return ResponseEntity.ok(orderItem);
+    // }
 
     // Create a new order item
     @PostMapping
