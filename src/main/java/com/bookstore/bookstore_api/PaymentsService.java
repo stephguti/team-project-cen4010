@@ -15,6 +15,15 @@ public class PaymentsService {
         this.paymentsRepository = paymentsRepository;
     }
 
+    public PaymentsModel createPayment(PaymentsModel payment) {
+        return paymentsRepository.save(payment);
+    }
+
+    public List<PaymentsModel> getPaymentsByOrder(OrderModel order) {
+        return paymentsRepository.findByOrder(order);
+    }
+
+
     public List<PaymentsModel> getAllPayments() {
         return paymentsRepository.findAll();
     }
@@ -22,14 +31,6 @@ public class PaymentsService {
     public PaymentsModel getPaymentById(Long paymentId) {
         return paymentsRepository.findById(paymentId).orElse(null);
     }
-
-    public PaymentsModel createPayment(PaymentsModel payment) {
-        return paymentsRepository.save(payment);
-    }
-
-    // public void deletePayment(Long paymentId) {
-    //     paymentsRepository.deleteById(paymentId);
-    // }
 
     public void deletePayment(Long paymentId) {
         if (!paymentsRepository.existsById(paymentId)) {
@@ -39,7 +40,7 @@ public class PaymentsService {
     }
 
 
-    public List<PaymentsModel> getPaymentsByOrderId(Long orderId) {
-        return paymentsRepository.findByOrderId(orderId);
-    }
+    // public List<PaymentsModel> getPaymentsByOrderId(Long orderId) {
+    //     return paymentsRepository.findByOrderId(orderId);
+    // }
 }

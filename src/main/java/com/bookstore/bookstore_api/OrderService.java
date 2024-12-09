@@ -2,6 +2,7 @@ package com.bookstore.bookstore_api;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+// import com.bookstore.bookstore_api.PaymentsService;
 
 import java.util.List;
 // import java.util.Optional;
@@ -10,10 +11,12 @@ import java.util.List;
 public class OrderService {
 
     private final OrderRepository orderRepository;
+    private final PaymentsService paymentsService;
 
     @Autowired
-    public OrderService(OrderRepository orderRepository) {
+    public OrderService(OrderRepository orderRepository, PaymentsService paymentsService) {
         this.orderRepository = orderRepository;
+        this.paymentsService = paymentsService;
     }
 
     public List<OrderModel> getAllOrders() {
@@ -25,8 +28,22 @@ public class OrderService {
     }
 
     public OrderModel createOrder(OrderModel order) {
-        return orderRepository.save(order);
+        // Save the new order
+        OrderModel savedOrder = orderRepository.save(order);
+    
+        // Automatically create a payment for the new order
+        PaymentsModel payment = new PaymentsModel();
+        payment.setOrder(savedOrder); // Set the entire OrderModel
+        payment.setPaymentDate(order.getOrderDate());
+        payment.setAmount(order.getTotalAmount());
+        payment.setStatus("Pending");
+    
+        paymentsService.createPayment(payment);
+    
+        return savedOrder;
     }
+    
+    
 
     // public void deleteOrder(Long orderId) {
     //     orderRepository.deleteById(orderId);

@@ -43,9 +43,4 @@ public class PaymentsController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
-
-    @GetMapping("/order/{orderId}")
-    public List<PaymentsModel> getPaymentsByOrderId(@PathVariable Long orderId) {
-        return paymentService.getPaymentsByOrderId(orderId);
-    }
 }

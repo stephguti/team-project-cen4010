@@ -37,65 +37,28 @@ public class OrderController {
 
 
     @GetMapping("/{orderId}")
-    public OrderDTO getOrderById(@PathVariable Long orderId) {
+    public Map<String, Object> getOrderByIdWithPayments(@PathVariable Long orderId) {
         OrderModel order = orderService.getOrderById(orderId);
         if (order == null) {
             throw new IllegalArgumentException("Order not found");
         }
 
-        OrderDTO orderDTO = new OrderDTO();
-        orderDTO.setOrderId(order.getOrderId());
-        orderDTO.setUserId(order.getUserId());
-        orderDTO.setOrderDate(order.getOrderDate());
-        orderDTO.setTotalAmount(order.getTotalAmount());
-        orderDTO.setStatus(order.getStatus());
-
-        List<OrderItemDTO> orderItems = order.getOrderItems().stream().map(item -> {
-            // Fetch book details
-            Book book = bookRepository.findById(item.getBookId().intValue())
-                    .orElseThrow(() -> new IllegalArgumentException("Book not found"));
-
-            // Prepare the response DTO
-            OrderItemDTO dto = new OrderItemDTO();
-            dto.setOrderItemId(item.getOrderItemId());
-            dto.setBookId(item.getBookId());
-            dto.setQuantity(item.getQuantity());
-            dto.setPrice(item.getPrice());
-            dto.setBookName(book.getTitle());
+        List<PaymentDTO> payments = paymentsService.getPaymentsByOrder(order).stream().map(payment -> {
+            PaymentDTO dto = new PaymentDTO();
+            dto.setPaymentId(payment.getPaymentId());
+            dto.setPaymentDate(payment.getPaymentDate());
+            dto.setAmount(payment.getAmount());
+            dto.setStatus(payment.getStatus());
             return dto;
         }).toList();
 
-        orderDTO.setOrderItems(orderItems);
-        return orderDTO;
+        Map<String, Object> response = new HashMap<>();
+        response.put("order", order);
+        response.put("payments", payments);
+
+        return response;
     }
 
-
-    // @GetMapping("/{orderId}")
-    // public OrderDTO getOrderById(@PathVariable Long orderId) {
-    //     OrderModel order = orderService.getOrderById(orderId);
-    //     if (order == null) {
-    //         throw new IllegalArgumentException("Order not found");
-    //     }
-    
-    //     OrderDTO orderDTO = new OrderDTO();
-    //     orderDTO.setOrderId(order.getOrderId());
-    //     orderDTO.setUserId(order.getUserId());
-    //     orderDTO.setOrderDate(order.getOrderDate());
-    //     orderDTO.setTotalAmount(order.getTotalAmount());
-    //     orderDTO.setStatus(order.getStatus());
-    
-    //     List<OrderItemDTO> orderItems = order.getOrderItems().stream().map(item -> {
-    //         OrderItemDTO dto = new OrderItemDTO();
-    //         dto.setOrderItemId(item.getOrderItemId());
-    //         dto.setBookId(item.getBookId());
-    //         dto.setQuantity(item.getQuantity());
-    //         dto.setPrice(item.getPrice());
-    //         return dto;
-    //     }).toList();
-    
-    //     orderDTO.setOrderItems(orderItems);
-    //     return orderDTO;
-    // }
     
 
     @PostMapping
@@ -124,19 +87,19 @@ public class OrderController {
         return orderService.updateOrder(orderId, updatedOrder);
     }
 
-    @GetMapping("/{orderId}/details")
-    public Map<String, Object> getOrderWithItems(@PathVariable Long orderId) {
-        OrderModel order = orderService.getOrderById(orderId);
-        List<Order_Items_Model> orderItems = orderItemsService.getOrderItemsByOrderId(orderId);
-        List<PaymentsModel> payments = paymentsService.getPaymentsByOrderId(orderId);
+    // @GetMapping("/{orderId}/details")
+    // public Map<String, Object> getOrderWithItems(@PathVariable Long orderId) {
+    //     OrderModel order = orderService.getOrderById(orderId);
+    //     List<Order_Items_Model> orderItems = orderItemsService.getOrderItemsByOrderId(orderId);
+    //     List<PaymentsModel> payments = paymentsService.getPaymentsByOrderId(orderId);
     
-        Map<String, Object> response = new HashMap<>();
-        response.put("order", order);
-        response.put("orderItems", orderItems);
-        response.put("payments", payments);
+    //     Map<String, Object> response = new HashMap<>();
+    //     response.put("order", order);
+    //     response.put("orderItems", orderItems);
+    //     response.put("payments", payments);
     
-        return response;
-    }
+    //     return response;
+    // }
 
     @GetMapping("/user/{userId}/saved")
     public List<OrderModel> getSavedOrdersByUserId(@PathVariable Long userId) {
