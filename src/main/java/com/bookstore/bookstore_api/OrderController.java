@@ -36,6 +36,23 @@ public class OrderController {
 
 
 
+    
+    
+    
+    @PostMapping
+    public OrderModel createOrder(@RequestBody OrderModel order) {
+        return orderService.createOrder(order);
+    }
+    
+    @DeleteMapping("/{orderId}")
+    public ResponseEntity<String> deleteOrder(@PathVariable Long orderId) {
+        try {
+            orderService.deleteOrder(orderId);
+            return ResponseEntity.ok("Order deleted successfully!");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
     @GetMapping("/{orderId}")
     public Map<String, Object> getOrderByIdWithPayments(@PathVariable Long orderId) {
         OrderModel order = orderService.getOrderById(orderId);
@@ -59,24 +76,11 @@ public class OrderController {
         return response;
     }
 
-    
 
-    @PostMapping
-    public OrderModel createOrder(@RequestBody OrderModel order) {
-        return orderService.createOrder(order);
-    }
-
-    @DeleteMapping("/{orderId}")
-    public ResponseEntity<String> deleteOrder(@PathVariable Long orderId) {
-    try {
-        orderService.deleteOrder(orderId);
-        return ResponseEntity.ok("Order deleted successfully!");
-    } catch (IllegalArgumentException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
-    }
-
-
+    // @GetMapping("/user/{userId}")
+    // public List<OrderModel> getOrdersByUserId(@PathVariable Long userId) {
+    //     return orderService.getOrdersByUserId(userId);
+    // }
     @GetMapping("/user/{userId}")
     public List<OrderModel> getOrdersByUserId(@PathVariable Long userId) {
         return orderService.getOrdersByUserId(userId);

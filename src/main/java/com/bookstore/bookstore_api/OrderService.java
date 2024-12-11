@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 // import com.bookstore.bookstore_api.PaymentsService;
 
+import java.time.LocalDateTime;
 import java.util.List;
 // import java.util.Optional;
 
@@ -27,27 +28,47 @@ public class OrderService {
         return orderRepository.findById(orderId).orElse(null);
     }
 
+    // public OrderModel createOrder(OrderModel order) {
+    //     // Save the new order
+    //     OrderModel savedOrder = orderRepository.save(order);
+    
+    //     // Automatically create a payment for the new order
+    //     PaymentsModel payment = new PaymentsModel();
+    //     payment.setOrder(savedOrder);
+    //     payment.setPaymentDate(order.getOrderDate());
+    //     payment.setAmount(order.getTotalAmount());
+    //     payment.setStatus("Open");
+    
+    //     paymentsService.createPayment(payment);
+    
+    //     return savedOrder;
+    // }
+
+
     public OrderModel createOrder(OrderModel order) {
+    // Set the current date and time
+        order.setOrderDate(LocalDateTime.now());
+
+        // Set a default status if not provided
+        if (order.getStatus() == null || order.getStatus().isEmpty()) {
+            order.setStatus("Open");
+        }
+
         // Save the new order
         OrderModel savedOrder = orderRepository.save(order);
-    
+
         // Automatically create a payment for the new order
         PaymentsModel payment = new PaymentsModel();
-        payment.setOrder(savedOrder); // Set the entire OrderModel
-        payment.setPaymentDate(order.getOrderDate());
+        payment.setOrder(savedOrder);
+        payment.setPaymentDate(LocalDateTime.now()); // Use the same date and time for payment creation
         payment.setAmount(order.getTotalAmount());
         payment.setStatus("Pending");
-    
+
         paymentsService.createPayment(payment);
-    
+
         return savedOrder;
     }
-    
-    
 
-    // public void deleteOrder(Long orderId) {
-    //     orderRepository.deleteById(orderId);
-    // }
 
     public void deleteOrder(Long orderId) {
         if (!orderRepository.existsById(orderId)) {

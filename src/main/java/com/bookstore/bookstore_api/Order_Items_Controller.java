@@ -1,6 +1,7 @@
 package com.bookstore.bookstore_api;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.bookstore.cart_dtos.OrderItemDTO;
@@ -80,13 +81,15 @@ public class Order_Items_Controller {
         return ResponseEntity.ok(dto);
     }
 
-    @DeleteMapping("/{orderItemId}")
-    public ResponseEntity<Void> deleteOrderItem(@PathVariable Long orderItemId) {
+    @DeleteMapping("/user/{userId}/book/{bookId}")
+    public ResponseEntity<String> deleteOrderItemByUserIdAndBookId(@PathVariable Long userId, @PathVariable Long bookId) {
         try {
-            orderItemsService.deleteOrderItem(orderItemId);
-            return ResponseEntity.noContent().build();
+            String successMessage = orderItemsService.deleteOrderItemByUserIdAndBookId(userId, bookId);
+            return ResponseEntity.ok(successMessage);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
+
+
 }
