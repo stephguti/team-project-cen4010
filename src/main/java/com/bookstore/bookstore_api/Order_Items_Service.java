@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -29,10 +30,21 @@ public class Order_Items_Service {
         return orderItemsRepository.findById(orderItemId).orElse(null);
     }
 
-    public Order_Items_Model createOrderItem(Long orderId, Long bookId, Integer quantity) {
-        // Fetch the order
-        OrderModel order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("Order not found with ID: " + orderId));
+    public Order_Items_Model createOrderItem(Long userId, Long bookId, Integer quantity) {
+        // Check if the user has an open order
+        List<OrderModel> openOrders = orderRepository.findByUserIdAndStatus(userId, "Open");
+        OrderModel order;
+    
+        if (!openOrders.isEmpty()) {
+            order = openOrders.get(0); // Use the existing open order
+        } else {
+            // Create a new order for the user
+            order = new OrderModel();
+            order.setUserId(userId);
+            order.setOrderDate(LocalDateTime.now());
+            order.setStatus("Open");
+            order = orderRepository.save(order);
+        }
     
         // Fetch the book
         Book book = bookRepository.findById(bookId.intValue())
@@ -58,6 +70,8 @@ public class Order_Items_Service {
     
         return savedOrderItem;
     }
+    
+
     
 
     public String deleteOrderItemByUserIdAndBookId(Long userId, Long bookId) {

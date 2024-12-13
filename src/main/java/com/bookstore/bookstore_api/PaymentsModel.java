@@ -21,7 +21,7 @@ public class PaymentsModel {
     private OrderModel order;
 
     @Column(name = "payment_date", nullable = false)
-    private LocalDateTime paymentDate;
+    private LocalDateTime paymentDate = LocalDateTime.now();
 
     @Column(name = "amount", nullable = false)
     private BigDecimal amount;

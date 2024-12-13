@@ -62,11 +62,12 @@ public class Order_Items_Controller {
 
     @PostMapping
     public ResponseEntity<OrderItemDTO> createOrderItem(@RequestBody Map<String, Object> payload) {
-        Long orderId = Long.valueOf(payload.get("orderId").toString());
+        Long userId = Long.valueOf(payload.get("userId").toString());
         Long bookId = Long.valueOf(payload.get("bookId").toString());
         Integer quantity = Integer.valueOf(payload.get("quantity").toString());
 
-        Order_Items_Model orderItem = orderItemsService.createOrderItem(orderId, bookId, quantity);
+        // Call the service method to create the order item
+        Order_Items_Model orderItem = orderItemsService.createOrderItem(userId, bookId, quantity);
 
         Book book = bookRepository.findById(bookId.intValue())
                 .orElseThrow(() -> new IllegalArgumentException("Book not found"));
@@ -80,6 +81,7 @@ public class Order_Items_Controller {
 
         return ResponseEntity.ok(dto);
     }
+
 
     @DeleteMapping("/user/{userId}/book/{bookId}")
     public ResponseEntity<String> deleteOrderItemByUserIdAndBookId(@PathVariable Long userId, @PathVariable Long bookId) {
